@@ -8,6 +8,7 @@ services:
       - caddy
     volumes:
       - /docker/loki:/loki
+    command: -config.file=/etc/loki/loki-docker-config.yaml
     restart: unless-stopped
 
   grafana:
