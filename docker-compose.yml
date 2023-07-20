@@ -1,0 +1,46 @@
+version: "3.8"
+services:
+  loki:
+    image: grafana/loki:2.8.2
+    ports:
+      - "3100:3100"
+    networks:
+      - caddy
+    volumes:
+      - /docker/loki:/loki
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    environment:
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+    labels:
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 3000}}"
+    networks:
+      - caddy
+    volumes:
+      - "/docker/grafana:/var/lib/grafana"
+    entrypoint:
+      - sh
+      - -euc
+      - |
+        mkdir -p /etc/grafana/provisioning/datasources
+        cat <<EOF > /etc/grafana/provisioning/datasources/ds.yaml
+        apiVersion: 1
+        datasources:
+        - name: Loki
+          type: loki
+          access: proxy 
+          orgId: 1
+          url: http://loki:3100
+          basicAuth: false
+          isDefault: true
+          version: 1
+          editable: false
+        EOF
+        /run.sh
+    restart: unless-stopped
+networks:
+  caddy:
+    external: true
