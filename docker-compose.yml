@@ -1,14 +1,14 @@
 version: "3.8"
 services:
   loki:
-    image: grafana/loki:2.8.2
+    image: grafana/loki:2.8.3
     ports:
       - "3100:3100"
     networks:
       - caddy
     volumes:
       - /docker/loki:/loki
-    command: -config.file=/etc/loki/local-config.yaml
+    command: -config.file=/etc/loki/local-docker-config.yaml
     restart: unless-stopped
 
   grafana:
