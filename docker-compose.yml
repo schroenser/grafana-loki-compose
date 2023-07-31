@@ -7,7 +7,8 @@ services:
     networks:
       - caddy
     volumes:
-      - /docker/loki:/loki
+      - /docker/loki/data:/loki
+      - /docker/loki/local-docker-config.yaml:/etc/loki/local-docker-config.yaml
     command: -config.file=/etc/loki/local-docker-config.yaml
     restart: unless-stopped
   grafana:
@@ -20,7 +21,7 @@ services:
     networks:
       - caddy
     volumes:
-      - "/docker/grafana:/var/lib/grafana"
+      - /docker/grafana/data:/var/lib/grafana
     entrypoint:
       - sh
       - -euc
