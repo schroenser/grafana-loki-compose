@@ -6,8 +6,9 @@ services:
       - 3100:3100
     networks:
       - caddy
+    user: '0'
     volumes:
-      - /docker/loki/data:/loki
+      - /docker/loki:/loki
     entrypoint:
       - sh
       - -euc
@@ -49,8 +50,9 @@ services:
       caddy.reverse_proxy: "{{upstreams 3000}}"
     networks:
       - caddy
+    user: '0'
     volumes:
-      - /docker/grafana/data:/var/lib/grafana
+      - /docker/grafana:/var/lib/grafana
     entrypoint:
       - sh
       - -euc
