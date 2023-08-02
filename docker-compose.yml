@@ -12,7 +12,7 @@ services:
       - sh
       - -euc
       - |
-        cat <<EOF > /etc/loki/local-config.yaml
+        cat <<EOF > /etc/loki/local-docker-config.yaml
         auth_enabled: false
         common:
           path_prefix: /loki
@@ -39,6 +39,7 @@ services:
           reporting_enabled: false
         EOF
         /usr/bin/loki
+    command: -config.file=/etc/loki/local-docker-config.yaml
     restart: unless-stopped
   grafana:
     image: grafana/grafana:latest
