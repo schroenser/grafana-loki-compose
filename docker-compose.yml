@@ -38,8 +38,7 @@ services:
         analytics:
           reporting_enabled: false
         EOF
-        /usr/bin/loki
-    command: -config.file=/etc/loki/local-docker-config.yaml
+        /usr/bin/loki -config.file=/etc/loki/local-docker-config.yaml
     restart: unless-stopped
   grafana:
     image: grafana/grafana:latest
