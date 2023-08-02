@@ -8,8 +8,37 @@ services:
       - caddy
     volumes:
       - /docker/loki/data:/loki
-      - /docker/loki/local-docker-config.yaml:/etc/loki/local-docker-config.yaml
-    command: -config.file=/etc/loki/local-docker-config.yaml
+    entrypoint:
+      - sh
+      - -euc
+      - |
+        cat <<EOF > /etc/loki/local-config.yaml
+        auth_enabled: false
+        common:
+          path_prefix: /loki
+          storage:
+            filesystem:
+              chunks_directory: /loki/chunks
+              rules_directory: /loki/rules
+          replication_factor: 1
+          ring:
+            kvstore:
+              store: inmemory
+        schema_config:
+          configs:
+            - from: 2020-10-24
+              store: boltdb-shipper
+              object_store: filesystem
+              schema: v11
+              index:
+                prefix: index_
+                period: 24h
+        ruler:
+          alertmanager_url: http://localhost:9093
+        analytics:
+          reporting_enabled: false
+        EOF
+        /usr/bin/loki
     restart: unless-stopped
   grafana:
     image: grafana/grafana:latest
