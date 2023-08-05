@@ -5,7 +5,8 @@ services:
     labels:
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "/loki/api/v1/* {{upstreams 3100}}"
-      caddy.basicauth: "/loki/api/v1/* \\{loki ${LOKI_BCRYPT_HASHED_PASSWORD}\\}"
+      caddy.basicauth: "/loki/api/v1/*"
+      caddy.basicauth.loki: ${LOKI_BCRYPT_HASHED_PASSWORD}
     networks:
       - caddy
     user: '0'
